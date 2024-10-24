@@ -59,7 +59,10 @@ class UserServices {
     private $email;
     public $error = array();
     public $success="";
-    
+    /*******************************************************
+     * SignUp function of the user
+     * -----------------------------------------------------
+     *  *******************************************************/
     public function signup($email, $user, $password){
         $dbConnection = new DatabaseAccess();
         
@@ -131,6 +134,48 @@ class UserServices {
             $this->error['database'] = 'Failed to create the user.';
             return $this->error;
         }
+    }
+    
+    /*******************************************************
+     * SingIn function of the user
+     * -----------------------------------------------------
+     *  *******************************************************/
+    function signIn($email = '', $user = '', $password = ''){
+        $query = '';
+        $dbConnection = new DatabaseAccess();
+        $this->email = htmlspecialchars(strip_tags($email));
+        $this->username = htmlspecialchars(strip_tags($user));
+        $this->password = htmlspecialchars(strip_tags($password));
+        if(!empty($this->email)){
+            $query = "SELECT user_email, user_pass FROM master_users WHERE user_email = :email";
+            $execute = $dbConnection->conn->prepare($query);
+            $execute->bindParam(':email', $this->email);
+            $execute->execute();
+            $result = $execute->fetch(PDO::FETCH_ASSOC);
+            //Login conditions
+            if($result['user_email'] == $this->email && $result['user_pass'] == md5($this->password)){
+                header("Location: index.php");
+            }else{
+                return "Invalid Credentials";
+            }
+            
+        }else if(!empty($this->username)){
+            $query = "SELECT user_login, user_pass FROM master_users WHERE  user_login = :username";
+            $execute = $dbConnection->conn->prepare($query);
+            $execute->bindParam(':username', $this->username);
+            $execute->execute();
+            $result = $execute->fetch(PDO::FETCH_ASSOC);
+            //Login conditions
+            if($result['user_login'] == $this->username && $result['user_pass'] == md5($this->password)){
+                header("Location: index.php");
+            }else{
+                return "Invalid Credentials";
+            }
+            
+        }
+
+
+
     }
 
     // Email validation function

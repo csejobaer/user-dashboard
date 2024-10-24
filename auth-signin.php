@@ -9,7 +9,7 @@
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
     <!-- App favicon -->
-    <link rel="shortcut icon" href="https://themesbrand.com/velzon/html/master/assets/images/favicon.ico">
+    <link rel="shortcut icon" href="assets/images/favicon.ico">
     <?php
         if(file_exists(__DIR__.'/functions.php')){
         include_once(__DIR__.'/functions.php');
@@ -17,7 +17,18 @@
             echo "<h2> Functions.php not exist in the directory </h2>";
         }
         getStyleCss();
+        $error = '';
         $SignIn = new UserServices();
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $user = $_POST['user'];
+            $pws = $_POST['password'];
+            if($SignIn->validateEmail($user)){
+                $error = $SignIn->signIn($user, '', $pws);
+            }else{
+                $removeSPUser = htmlspecialchars(strip_tags($user));
+                $error = $SignIn->signIn('', $removeSPUser, $pws);
+            }
+        }
 
     ?>
 </head>
@@ -61,23 +72,27 @@
                                 <div class="text-center mt-2">
                                     <h5 class="text-primary">Welcome Back ! <br/><?php if(!empty($SignIn->success)){echo $SignIn->success;}?></h5>
                                     <p class="text-muted">Sign in to continue to Velzon.</p>
+                                    <?php if($error != ''){echo "<p>".$error."</p>";}?>
                                 </div>
                                 <div class="p-2 mt-4">
-                                    <form action="https://themesbrand.com/velzon/html/master/index.html">
+                                    <form  method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" >
 
                                         <div class="mb-3">
                                             <label for="username" class="form-label">Username</label>
-                                            <input type="text" class="form-control" id="username" placeholder="Enter username">
+                                            <input type="text" name="user" class="form-control" id="username" placeholder="Enter username" required>
                                         </div>
 
                                         <div class="mb-3">
                                             <div class="float-end">
-                                                <a href="https://themesbrand.com/velzon/html/master/auth-pass-reset-basic.html" class="text-muted">Forgot password?</a>
+                                                <a href="auth-pass-reset-basic.html" class="text-muted">Forgot password?</a>
                                             </div>
                                             <label class="form-label" for="password-input">Password</label>
                                             <div class="position-relative auth-pass-inputgroup mb-3">
-                                                <input type="password" class="form-control pe-5 password-input" placeholder="Enter password" id="password-input">
+                                            <input type="password" name="password" class="form-control pe-5 password-input" onpaste="return false" placeholder="Enter password" id="password-input" aria-describedby="passwordInput" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required="" aria-autocomplete="list">
                                                 <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon material-shadow-none" type="button" id="password-addon"><i class="ri-eye-fill align-middle"></i></button>
+                                                <div class="invalid-feedback">
+                                                    Please enter password
+                                                </div>
                                             </div>
                                         </div>
 
@@ -109,7 +124,7 @@
                         <!-- end card -->
 
                         <div class="mt-4 text-center">
-                            <p class="mb-0">Don't have an account ? <a href="https://themesbrand.com/velzon/html/master/auth-signup-basic.html" class="fw-semibold text-primary text-decoration-underline"> Signup </a> </p>
+                            <p class="mb-0">Don't have an account ? <a href="<?php  echo dirname($_SERVER['PHP_SELF']).'/auth-signup.php';?>" class="fw-semibold text-primary text-decoration-underline"> Signup </a> </p>
                         </div>
 
                     </div>

@@ -3,7 +3,9 @@
 
 <?php
 function admin_javaScript(){
-    return ' <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    return '
+    <script src="assets/js/pages/jquery-3.6.0.js"></script>
+    <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/libs/simplebar/simplebar.min.js"></script>
     <script src="assets/libs/node-waves/waves.min.js"></script>
     <script src="assets/libs/feather-icons/feather.min.js"></script>
@@ -29,9 +31,12 @@ function admin_javaScript(){
     <!-- validation init -->
     <script src="assets/js/pages/form-validation.init.js"></script>
     <!-- password create init -->
-    <script src="assets/js/pages/js/pages/passowrd-create.init.js"></script>
+    <script src="assets/js/pages/passowrd-create.init.js"></script>
+    <script src="assets/js/pages/profile-setting.init.js"></script>
 
     <!-- App js -->
+
+    <script src="assets/js/custom.js"></script>;
     <script src="assets/js/app.js"></script>';
 }
 

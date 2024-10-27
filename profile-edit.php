@@ -9,6 +9,11 @@ if(!isset($user_id)){
 
 
 
+
+
+
+
+
 ?>
         <!-- Left Sidebar End -->
         <!-- Vertical Overlay-->
@@ -249,7 +254,7 @@ if(!isset($user_id)){
                                                     <!--end col-->
                                                     <div class="col-lg-12">
                                                         <div class="hstack gap-2 justify-content-end">
-                                                            <button type="submit" class="btn btn-primary">Updates</button>
+                                                            <button type="submit" id="update_user_info" class="btn btn-primary">Updates</button>
                                                             <button type="button" class="btn btn-soft-success">Cancel</button>
                                                         </div>
                                                     </div>

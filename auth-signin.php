@@ -11,6 +11,16 @@
     <!-- App favicon -->
     <link rel="shortcut icon" href="assets/images/favicon.ico">
     <?php
+        //Session Status
+        ob_start();
+        session_start();
+        if (isset($_SESSION['type'])) {
+            // Redirect to login page if the session is not set
+            header("location: index.php");
+            exit();
+        }
+
+        //Singnin information
         if(file_exists(__DIR__.'/functions.php')){
         include_once(__DIR__.'/functions.php');
         }else{

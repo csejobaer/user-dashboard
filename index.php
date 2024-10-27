@@ -1,6 +1,14 @@
 <?php
 include_once('functions.php');
-    get_header();
+get_header();
+$user_id = $_SESSION['type'];
+if(!isset($user_id)){
+    header('location: auth-signin.php');
+}
+
+
+
+
 ?>
         <!-- Left Sidebar End -->
         <!-- Vertical Overlay-->

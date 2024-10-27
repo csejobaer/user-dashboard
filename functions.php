@@ -146,6 +146,8 @@ class UserServices {
         $this->email = htmlspecialchars(strip_tags($email));
         $this->username = htmlspecialchars(strip_tags($user));
         $this->password = htmlspecialchars(strip_tags($password));
+        // Data encryption object
+        $encrypt = new EncrypDecrypt();
         if(!empty($this->email)){
             $query = "SELECT user_email, user_pass FROM master_users WHERE user_email = :email";
             $execute = $dbConnection->conn->prepare($query);
@@ -153,9 +155,17 @@ class UserServices {
             $execute->execute();
             $result = $execute->fetch(PDO::FETCH_ASSOC);
             //Login conditions
-            if($result['user_email'] == $this->email && $result['user_pass'] == md5($this->password)){
-                header("Location: index.php");
-            }else{
+            ob_start();
+            session_start();
+
+            if ($result['user_email'] == $this->email && $result['user_pass'] == md5($this->password)) {
+                // Include and initialize your encryption class
+                $encrypt = new EncrypDecrypt();
+                // Set session variable
+                $_SESSION['type'] = $encrypt->encode($this->email);
+                header("location: index.php");
+                exit();
+            } else {
                 return "Invalid Credentials";
             }
             
@@ -166,8 +176,12 @@ class UserServices {
             $execute->execute();
             $result = $execute->fetch(PDO::FETCH_ASSOC);
             //Login conditions
+            ob_start();
+            session_start();
             if($result['user_login'] == $this->username && $result['user_pass'] == md5($this->password)){
-                header("Location: index.php");
+                //Set session
+                $_SESSION['type'] = $encrypt->encode($this->username);
+                header("location: index.php");
             }else{
                 return "Invalid Credentials";
             }
@@ -190,5 +204,36 @@ class UserServices {
     // Password validation function
     public function validatePassword($password) {
         return strlen($password) >= 8;
+    }
+}
+
+
+class EncrypDecrypt {
+    private $key;
+    private $iv;
+    public function __construct() {
+        // Generate a 32-byte encryption key using sha256 to make it compatible with AES-256
+        $this->key = substr(hash('sha256', 'EnCRypT10nK#Y!RiSRNn'), 0, 32);
+        // Use a 16-byte initialization vector (IV) for AES-256-CBC
+        $this->iv = substr(hash('md5', 'unique_iv'), 0, 16);
+    }
+    public function encode($value) {
+        if (!$value) {
+            return false;
+        }
+        // Encrypt the value using AES-256-CBC
+        $encrypted = openssl_encrypt($value, 'AES-256-CBC', $this->key, OPENSSL_RAW_DATA, $this->iv);
+        // Encode the binary data in base64 and reverse it for obfuscation
+        return strrev(base64_encode($encrypted));
+    }
+    public function decode($value) {
+        if (!$value) {
+            return false;
+        }
+        // Reverse the obfuscation and decode from base64
+        $encrypted = base64_decode(strrev($value));
+        
+        // Decrypt the value using AES-256-CBC
+        return openssl_decrypt($encrypted, 'AES-256-CBC', $this->key, OPENSSL_RAW_DATA, $this->iv);
     }
 }

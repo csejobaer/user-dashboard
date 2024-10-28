@@ -36,7 +36,7 @@ function admin_javaScript(){
 
     <!-- App js -->
 
-    <script src="assets/js/custom.js"></script>;
+    <script src="ajax.js"></script>;
     <script src="assets/js/app.js"></script>';
 }
 

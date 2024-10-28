@@ -32,7 +32,7 @@ $(document).ready(function() {
         formData.append('user_cover_url', $('#profile-foreground-img-file-input')[0].files[0]);
 
         $.ajax({
-            url: '../../update_user_info.php',
+            url: 'update_user_info.php',
             type: 'POST',
             data: formData,
             contentType: false,

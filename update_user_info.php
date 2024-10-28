@@ -1,5 +1,10 @@
 <?php 
 
+echo "</h1> Hello error box</h1>";
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // Update the data with ajax
 if(file_exists(__DIR__.'/config.php')){
 require_once(__DIR__.'/config.php'); 
@@ -72,8 +77,12 @@ try {
         }
     }
 } catch (PDOException $e) {
-    error_log("Database update error: " . $e->getMessage());
+    $response['success'] = false;
+    $response['error'] = "Database update error: " . $e->getMessage();
+    echo json_encode($response);
+    exit;
 }
+
 
 echo json_encode($response);
 

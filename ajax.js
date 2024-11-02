@@ -12,10 +12,10 @@ $(document).ready(function() {
         let zipCode = $('#zipcodeInput').val().trim();
         let description = $('#exampleFormControlTextarea').val().trim();
 
-        if (!firstName || !lastName || !phone || !joiningDate || !designation || !city || !country) {
-            alert("Please fill in all required fields.");
-            return;
-        }
+        // if (!firstName || !lastName || !phone || !joiningDate || !designation || !city || !country) {
+        //     alert("Please fill in all required fields.");
+        //     return;
+        // }
 
         let formData = new FormData();
         formData.append('user_url', $('#profile-img-file-input')[0].files[0]);
@@ -30,26 +30,26 @@ $(document).ready(function() {
         formData.append('zip_code', zipCode);
         formData.append('description', description);
         formData.append('user_cover_url', $('#profile-foreground-img-file-input')[0].files[0]);
-
+        
         $.ajax({
             url: 'update_user_info.php',
             type: 'POST',
             data: formData,
-            contentType: false,
+            // contentType: false,
             processData: false,
             success: function(response) {
                 if (response.success) {
                     // Update display elements with new values
-                    $('#display_first_name').text(firstName);
-                    $('#display_last_name').text(lastName);
-                    $('#display_phone').text(phone);
-                    $('#display_skill').text(skill);
-                    $('#display_joining_date').text(joiningDate);
-                    $('#display_designation').text(designation);
-                    $('#display_city').text(city);
-                    $('#display_country').text(country);
-                    $('#display_zip_code').text(zipCode);
-                    $('#display_description').text(description);
+                    // $('#display_first_name').text(firstName);
+                    // $('#display_last_name').text(lastName);
+                    // $('#display_phone').text(phone);
+                    // $('#display_skill').text(skill);
+                    // $('#display_joining_date').text(joiningDate);
+                    // $('#display_designation').text(designation);
+                    // $('#display_city').text(city);
+                    // $('#display_country').text(country);
+                    // $('#display_zip_code').text(zipCode);
+                    // $('#display_description').text(description);
 
                     // Update images if necessary
                     if (response.user_url) {
@@ -61,6 +61,7 @@ $(document).ready(function() {
 
                     alert("User information updated successfully!");
                 } else {
+                    
                     alert("Failed to update user information.");
                 }
             },
